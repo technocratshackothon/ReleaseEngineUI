@@ -1,0 +1,58 @@
+.navbar .engine-title{
+    margin: auto;
+}
+
+.mat-grid{
+    margin: 5px;
+
+}
+
+.mat-grid .tile {
+    background: white;
+    border: 2px solid #000;
+    border-radius: 15px;
+  }
+
+  .mat-grid .tile .header, .mat-grid .deployment-tile .header{
+      background-color: white;
+      color: #3f51b5;
+      font-size: medium;
+  }
+  .mat-grid .deployment-tile{
+    background: white;
+  }
+
+  .rating-header{
+    justify-content: center;
+  }
+
+  .notification-form{
+    display: flex;
+    flex-direction: column;
+    align-content: space-around;
+  }
+
+  .start-deployment-button{
+        color: black;
+  }
+
+  .mat-grid .tile .footer{
+    background-color: white;
+    color: #3f51b5;
+    font-weight: bolder;
+    align-content: center;
+}
+
+footer .get-status{
+    float: right;
+}
+
+  .release-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 80%;
+  }
+  
+  .release-full-width {
+    width: 100%;
+  }

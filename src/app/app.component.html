@@ -1,0 +1,83 @@
+<mat-toolbar color="primary" class="navbar">
+  <mat-toolbar-row>
+    <!-- <button mat-icon-button>
+      <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
+    </button> -->
+    <h1 class="engine-title">Release Engine Console</h1>
+    <span class="menu-spacer"></span>
+    <div>
+      <!-- <a mat-button [routerLink]="'/accounts'"> Accounts </a> -->
+
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-grid-list [gridCols]="{xs: 3, sm: 3, md: 3, lg: 3, xl: 3}"  gutterSize="5px" class="mat-grid" rowHeight="350px">
+  <mat-grid-tile class="tile">
+    <mat-grid-tile-header class="header">
+      Application Details
+    </mat-grid-tile-header>
+    <mat-card>
+      <form class="release-form">
+        <mat-form-field class="release-full-width">
+          <mat-label>Application Name</mat-label>
+          <mat-select>
+            <mat-option *ngFor="let food of foods" [value]="food.value">
+              {{food.viewValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="release-full-width">
+          <mat-label>Release Name</mat-label>
+          <mat-select>
+            <mat-option *ngFor="let food of foods" [value]="food.value">
+              {{food.viewValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+      <mat-card-footer>
+
+      </mat-card-footer>
+    </mat-card>
+    <mat-grid-tile-footer class="footer">
+      <button mat-button color="primary"> Get Status </button>
+    </mat-grid-tile-footer>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="2" class="tile">
+    <mat-grid-tile-header class="header">
+      Release Statistics
+    </mat-grid-tile-header>
+    <div style="display: block;">
+      <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+        [legend]="barChartLegend" [chartType]="barChartType">
+      </canvas>
+    </div>
+    <div style="display: block;">
+      <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
+        [legend]="lineChartLegend" [chartType]="lineChartType">
+      </canvas>
+    </div>
+    <div style="display: block">
+      <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels"
+        [chartType]="doughnutChartType"></canvas>
+    </div>
+  </mat-grid-tile>
+  <!-- <mat-grid-tile colspan="1"></mat-grid-tile>  -->
+  <mat-grid-tile colspan="3" class="deployment-tile">
+    <form class="notification-form">
+    <mat-grid-tile-header class="header rating-header">
+      Overall Release Recommendation : 
+      &nbsp;&nbsp;&nbsp;
+      <app-star-rating [rating]='displayRatingValue' [itemId]='0'></app-star-rating>
+    </mat-grid-tile-header>
+    <mat-checkbox color="primary" style="float:left"name="ltiStackHolderNotification">
+        Send email to LTI Stakeholders
+      </mat-checkbox><br>
+      <mat-checkbox color="primary" name="nordeaStackHolderNotification">
+        Send email to Nordea Stakeholders
+      </mat-checkbox>
+      <button mat-raised-button  color="primary">Start Depolyment</button>
+    </form>
+  </mat-grid-tile>
+</mat-grid-list>
