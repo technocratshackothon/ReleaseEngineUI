@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,10 +17,12 @@ import {
   MatSelectModule,
   MatCheckboxModule
  } from  '@angular/material';
-import { FormsModule } from '@angular/forms';
+ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChartsModule } from 'ng2-charts';
 import { StarRatingComponent } from './star-rating/star-rating.component';
 import { GridColsDirective } from './directives/grid-col-directive';
+import { GaugeChartModule } from 'angular-gauge-chart'
+import { AppService } from './app.service';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { GridColsDirective } from './directives/grid-col-directive';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     MatToolbarModule, 
     MatIconModule, 
     MatSidenavModule,
@@ -44,9 +48,10 @@ import { GridColsDirective } from './directives/grid-col-directive';
     MatCardModule,
     MatSelectModule,
     MatCheckboxModule,
-    ChartsModule
+    ChartsModule,
+    GaugeChartModule
   ],
-  providers: [],
+  providers: [AppService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

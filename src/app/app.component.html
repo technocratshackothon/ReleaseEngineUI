@@ -1,83 +1,87 @@
 <mat-toolbar color="primary" class="navbar">
-  <mat-toolbar-row>
-    <!-- <button mat-icon-button>
-      <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
-    </button> -->
-    <h1 class="engine-title">Release Engine Console</h1>
-    <span class="menu-spacer"></span>
-    <div>
-      <!-- <a mat-button [routerLink]="'/accounts'"> Accounts </a> -->
-
-    </div>
-  </mat-toolbar-row>
+  <h1 class="engine-title">{{title}}</h1>
 </mat-toolbar>
 
-<mat-grid-list [gridCols]="{xs: 3, sm: 3, md: 3, lg: 3, xl: 3}"  gutterSize="5px" class="mat-grid" rowHeight="350px">
-  <mat-grid-tile class="tile">
-    <mat-grid-tile-header class="header">
-      Application Details
-    </mat-grid-tile-header>
-    <mat-card>
-      <form class="release-form">
+<mat-grid-list [gridCols]="{xs: 3, sm: 3, md: 3, lg: 3, xl: 3}" gutterSize="5px" class="mat-grid" rowHeight="350px">
+  <form class="release-form" [formGroup]="getStatusForm" (ngSubmit)="onSubmitForm()">
+    <mat-grid-tile class="tile">
+      <mat-grid-tile-header class="header">
+        Application Details
+      </mat-grid-tile-header>
+      <mat-card>
         <mat-form-field class="release-full-width">
           <mat-label>Application Name</mat-label>
-          <mat-select>
-            <mat-option *ngFor="let food of foods" [value]="food.value">
-              {{food.viewValue}}
+          <mat-select formControlName="applicationName" (selectionChange)="onApplicationChange($event)">
+            <mat-option *ngFor="let application of applicationList" [value]="application">
+              {{application.name}}
             </mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field class="release-full-width">
           <mat-label>Release Name</mat-label>
-          <mat-select>
-            <mat-option *ngFor="let food of foods" [value]="food.value">
-              {{food.viewValue}}
+          <mat-select formControlName="releaseName">
+            <mat-option *ngFor="let release of releaseList" [value]="release.releaseName">
+              {{release.releaseName}}
             </mat-option>
           </mat-select>
         </mat-form-field>
-      </form>
-      <mat-card-footer>
+        <mat-card-footer>
 
-      </mat-card-footer>
-    </mat-card>
-    <mat-grid-tile-footer class="footer">
-      <button mat-button color="primary"> Get Status </button>
-    </mat-grid-tile-footer>
-  </mat-grid-tile>
+        </mat-card-footer>
+      </mat-card>
+      <mat-grid-tile-footer class="footer">
+        <button mat-raised-button color="primary" class="get-status" type="submit" [disabled]="getStatusForm.invalid">
+          &nbsp;&nbsp;&nbsp;&nbsp;Load Statistics&nbsp;&nbsp;&nbsp;&nbsp; </button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button mat-raised-button color="primary" type="button" (click)="resetForm()">&nbsp;&nbsp;&nbsp;&nbsp;
+          Reset&nbsp;&nbsp;&nbsp;&nbsp; </button>
+      </mat-grid-tile-footer>
+    </mat-grid-tile>
+  </form>
   <mat-grid-tile colspan="2" class="tile">
-    <mat-grid-tile-header class="header">
+    <mat-grid-tile-header class="header" *ngIf="renderDashboard">
       Release Statistics
     </mat-grid-tile-header>
-    <div style="display: block;">
+    <div class="container" *ngIf="!renderDashboard">
+      <img src="assets/img/new.jpg" alt="chart not loaded" style="width:100%;">
+      <div class="centered">Please select application name and release name in the form and click on "Load Statistics"
+        button to render dashboard</div>
+    </div>
+
+    <div class="chart-div" *ngIf="renderDashboard">
       <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
         [legend]="barChartLegend" [chartType]="barChartType">
       </canvas>
     </div>
-    <div style="display: block;">
+    <div class="chart-div" *ngIf="renderDashboard">
       <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
         [legend]="lineChartLegend" [chartType]="lineChartType">
       </canvas>
     </div>
-    <div style="display: block">
-      <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels"
-        [chartType]="doughnutChartType"></canvas>
-    </div>
   </mat-grid-tile>
-  <!-- <mat-grid-tile colspan="1"></mat-grid-tile>  -->
-  <mat-grid-tile colspan="3" class="deployment-tile">
-    <form class="notification-form">
+  <mat-grid-tile colspan="1" class="deployment-tile">
+    <mat-grid-tile-header class="header rating-header" *ngIf="renderDashboard">
+      Release Satisfaction Percentage
+    </mat-grid-tile-header>
+    <div class="container" *ngIf="!renderDashboard">
+      <img src="assets/img/gauge.png" alt="chart not loaded" style="width:100%;">
+      <div class="centered">Release satisfaction percentage gauge </div>
+    </div>
+    <rg-gauge-chart *ngIf="renderDashboard" [canvasWidth]="canvasWidth" [needleValue]="needleValue"
+      [centralLabel]="centralLabel" [options]="options" [bottomLabel]="bottomLabel"></rg-gauge-chart>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="2" class="deployment-tile">
+
     <mat-grid-tile-header class="header rating-header">
-      Overall Release Recommendation : 
+      Overall Release Recommendation :
       &nbsp;&nbsp;&nbsp;
       <app-star-rating [rating]='displayRatingValue' [itemId]='0'></app-star-rating>
     </mat-grid-tile-header>
-    <mat-checkbox color="primary" style="float:left"name="ltiStackHolderNotification">
-        Send email to LTI Stakeholders
-      </mat-checkbox><br>
-      <mat-checkbox color="primary" name="nordeaStackHolderNotification">
-        Send email to Nordea Stakeholders
+    <form class="notification-form" [formGroup]="startDeploymentForm">
+      <mat-checkbox color="primary" formControlName="sendNotifitcation" style="float:left">
+        Send email to all stakeholders
       </mat-checkbox>
-      <button mat-raised-button  color="primary">Start Depolyment</button>
+      <button mat-raised-button [disabled]="startDeploymentForm.invalid" color="primary">Start Depolyment</button>
     </form>
   </mat-grid-tile>
 </mat-grid-list>
